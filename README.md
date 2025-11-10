@@ -78,12 +78,12 @@ Une API a été développée pour fournir des **prédictions de prix optimaux** 
 ```
 Documentation de l'API : 
 [**Documentation de l'API sur Hugging Face**](https://flodussart-getaroundapicertif.hf.space/doc)
-
 Espace Hugging Face :
-[**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundapicertif)
+[**Espace Huuging Face**](https://huggingface.co/spaces/flodussart/getaroundapicertif)
+
 ---
 
-Suivi du modèle (MLflow)
+## Suivi du modèle (MLflow)
 
 Le suivi du modèle (versions, métriques, paramètres) a été mis en place sur MLflow, déployé sur un espace Hugging Face dédié.
 [**Suivi du modèle**](https://huggingface.co/spaces/flodussart/getaround_mlflow)
