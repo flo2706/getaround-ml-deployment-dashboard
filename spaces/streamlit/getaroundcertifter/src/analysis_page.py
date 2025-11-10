@@ -65,16 +65,6 @@ def page_analyse_retards(
         df_delay[COL_DELAY], errors="coerce"
     ).clip(CLIP_MIN, CLIP_MAX)
 
-    # Build mapping A -> B for propagation
-    # if {COL_RENTAL_ID, COL_PREV_ID}.issubset(df_delay.columns):
-    #     mapping = (
-    #         df_delay.dropna(subset=[COL_PREV_ID])
-    #         .set_index(COL_PREV_ID)[COL_RENTAL_ID]
-    #         .to_dict()
-    #     )
-    #     df_delay["next_rental_id"] = df_delay[COL_RENTAL_ID].map(mapping)
-    # else:
-    #     df_delay["next_rental_id"] = np.nan
 
     # Header
     svg = read_logo("getaround_logo.svg")
