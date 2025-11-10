@@ -25,7 +25,7 @@ L’objectif de ce projet est double :
   - la fréquence des retards 
   - leur impact sur les revenus 
   - les scénarios possibles selon le délai entre locations
-- Développer un **modèle de prédiction du prix de location**, exposé via un endpoint `/predict`
+- Développer un **modèle de prédiction du prix de location**, exposé via un endpoint `/predict`, **et intégré directement dans le dashboard Streamlit pour la prédiction en ligne.**  
 - Déployer l’ensemble sur le web :
   - API hébergée sur **Hugging Face Spaces** (FastAPI)
   - Dashboard déployé sur **Hugging Face** (Streamlit)
@@ -57,6 +57,7 @@ Le tableau de bord permet :
 - d’explorer les retards selon les types de location (mobile, connectée)
 - d’évaluer l’impact d’un délai minimal sur les revenus potentiels
 - d’afficher les indicateurs clés pour la prise de décision produit
+- et de tester directement le modèle de prédiction via une page dédiée qui interagit avec l’API FastAPI  
 
 Accès au dashboard :  
 [**Getaround Dashboard sur Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundcertifter)
@@ -64,43 +65,30 @@ Accès au dashboard :
 ---
 ## Sélection du modèle final
 
-Plusieurs modèles ont été entraînés et comparés dans le cadre de l’optimisation des prix :
-- **Gradient Boosting (GB)**  
-- **XGBoost (XGB)**  
-- **LightGBM (LGBM)**  
+## Sélection du modèle final
 
-Chaque modèle a été évalué selon plusieurs métriques :
-- **R² (train/test)** : qualité d’ajustement, indicateur du surapprentissage
-- **RMSE** : erreur quadratique moyenne sur le test set
-- **MAE** : erreur absolue moyenne sur le test set
+Plusieurs modèles ont été entraînés et comparés pour l’optimisation des prix :
+**Linear Regression**, **XGBoost** et **LightGBM**.
 
-Les résultats, enregistrés dans **MLflow**, montrent que les modèles XGBoost avaient tendance à **sur-apprendre** les données d’entraînement :  
-leur `r2_train` est très élevé (>0.91) alors que leur `r2_test` reste stable autour de 0.82.  
-Cela indique une **légère perte de généralisation** malgré de bonnes performances globales.
-
-À l’inverse, le modèle **LightGBM (run_name : `lgbm_search_catset_5`)** présente :
-- un **r²_train = 0.8475**
-- un **r²_test = 0.8184**  
-- un **RMSE_test = 14.118**  
-- un **MAE_test = 9.744** 
-
-ce qui traduit un **meilleur équilibre entre biais et variance** et la **meilleure performance globale parmi les modèles LGBM testés**.
+Les expérimentations, suivies avec **MLflow**, ont montré que :
+- Les modèles **XGBoost** offraient de très bonnes performances mais tendaient à **sur-apprendre** les données d’entraînement.  
+- Le modèle **LightGBM** (run `lgbm_search_catset_5`) présentait le **meilleur compromis entre biais et variance**, avec d’excellents résultats de généralisation sur le jeu de test.
 
 Ce modèle a donc été retenu pour :
-- sa stabilité en validation croisée,  
-- sa performance cohérente entre train et test,  
-- et sa compatibilité avec **MLflow** pour le suivi des hyperparamètres.
+- sa stabilité en validation croisée et ses performances équilibrées
+- et son intégration fluide avec **MLflow** pour le suivi et le déploiement
 
-Le modèle final **`lgbm_search_catset_5`** est celui déployé dans l’API `/predict` sur Hugging Face.
+Le modèle final **`lgbm_search_catset_5`** est celui **déployé dans l’API `/predict`** sur Hugging Face.
+
 
 ## Suivi du modèle (MLflow)
 Les artefacts (modèles entraînés, métriques, configurations) sont versionnés et sauvegardés automatiquement via :
 
-MLflow Tracking (expérimentations et métriques) :  
+- MLflow Tracking (expérimentations et métriques) :  
 [**Suivi du modèle**](https://huggingface.co/spaces/flodussart/getaround_mlflow)
 
-Amazon S3 (stockage des artefacts du modèle)  
-Neon DB (PostgreSQL) pour le suivi des runs et la persistance des métadonnées
+- Amazon S3 (stockage des artefacts du modèle)  
+- Neon DB (PostgreSQL) pour le suivi des runs et la persistance des métadonnées
 
 ---
 ##  API de prédiction
@@ -134,16 +122,14 @@ Deux datasets distincts ont été exploités et stockés sur Hugging Face Datase
 | **pricing_optimization** | Données pour l’apprentissage automatique d’optimisation de prix | [📊 get_around_pricing_project.csv](https://huggingface.co/datasets/flodussart/getaround_pricing_project/resolve/main/get_around_pricing_project.csv) |
 
 --- 
+## Infrastructure du projet
 
-| Composant                          | Description                                                           |
-| ---------------------------------- | --------------------------------------------------------------------- |
-| **FastAPI (Hugging Face Space)**   | API en production pour la prédiction de prix                          |
-| **Streamlit (Hugging Face Space)** | Dashboard d’analyse et de visualisation                               |
-| **MLflow (Hugging Face Space)**    | Suivi du modèle, des expériences et des métriques                     |
-| **Amazon S3**                      | Stockage des artefacts (modèles entraînés, fichiers de configuration) |
-| **Neon DB (PostgreSQL)**           | Base de données hébergée pour la persistance MLflow                   |
-| **Hugging Face Datasets**          | Stockage public des datasets (analyse + pricing)                      |
-| **Docker**                         | Conteneurisation du projet pour un déploiement reproductible          |
+L’infrastructure repose sur une architecture modulaire et reproductible :
+- **FastAPI** : API REST pour la prédiction en ligne.
+- **Streamlit** : interface web interactive pour l’analyse des retards.
+- **MLflow + Neon DB + S3** : suivi, stockage et persistance du modèle.
+- **Hugging Face Datasets** : gestion centralisée des jeux de données.
+- **Docker** : conteneurisation et déploiement multi-environnements.
 
 
 
