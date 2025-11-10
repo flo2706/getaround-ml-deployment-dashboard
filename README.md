@@ -82,7 +82,7 @@ L’API permet de générer des **prédictions de prix optimaux** à partir des 
 }
 ```
 Documentation interactive :  
-[**Documentation de l'API sur Hugging Face**](https://flodussart-getaroundapicertif.hf.space/doc)
+[**Documentation de l'API sur Hugging Face**](https://flodussart-getaroundapicertif.hf.space/docs)
 
 Espace Hugging Face :  
 [**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundapicertif)
@@ -93,10 +93,10 @@ Espace Hugging Face :
 Deux jeux de données hébergés sur Hugging Face Datasets assurent la traçabilité et la reproductibilité du projet :
 
 
-| Dataset                  | Description                                                     | Lien                                                                                                                                                  |
-| ------------------------ | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **delay_analysis**       | Analyse des retards lors de la restitution des véhicules        | [get_around_delay_analysis.xlsx](https://huggingface.co/datasets/flodussart/getaround_xls_certif/resolve/main/get_around_delay_analysis.xlsx)      |
-| **pricing_optimization** | Données d'entraînement pour la tarification prédictive| [ get_around_pricing_project.csv](https://huggingface.co/datasets/flodussart/getaround_pricing_project/resolve/main/get_around_pricing_project.csv) |
+| Dataset | Description | Lien |
+|----------|--------------|------|
+| **delay_analysis** | Analyse des retards lors des restitutions de véhicules | [🔗 Voir sur Hugging Face](https://huggingface.co/datasets/flodussart/getaround_xls_certif) |
+| **pricing_optimization** | Données d’entraînement pour la tarification prédictive | [🔗 Voir sur Hugging Face](https://huggingface.co/datasets/flodussart/getaround_pricing_project) |
 
 --- 
 ## Infrastructure du projet
