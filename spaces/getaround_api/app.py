@@ -105,7 +105,6 @@ ALLOWED_PAINT = {
     "beige",
     "green",
     "orange",
-    "other",
 }
 ALLOWED_CARTYPE = {
     "estate",
@@ -116,7 +115,6 @@ ALLOWED_CARTYPE = {
     "coupe",
     "convertible",
     "van",
-    "other",
 }
 
 KNOWN_MODELS = {
@@ -147,10 +145,9 @@ KNOWN_MODELS = {
     "honda",
     "mazda",
     "yamaha",
-    "other",
 }
 
-# If True: reject unseen categories instead of mapping them to "other"
+# If True: reject unseen categories with validation error
 STRICT = True
 
 
@@ -207,7 +204,6 @@ class PredictRow(BaseModel):
             return v
         if STRICT:
             raise ValueError(f"paint_color must be in {sorted(ALLOWED_PAINT)}")
-        return "other"
 
     @field_validator("car_type")
     @classmethod
@@ -216,7 +212,6 @@ class PredictRow(BaseModel):
             return v
         if STRICT:
             raise ValueError(f"car_type must be in {sorted(ALLOWED_CARTYPE)}")
-        return "other"
 
     @field_validator("model_key")
     @classmethod
@@ -225,7 +220,6 @@ class PredictRow(BaseModel):
             return v
         if STRICT:
             raise ValueError("unknown model_key")
-        return "other"
 
 
 class PredictPayload(BaseModel):

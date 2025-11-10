@@ -65,7 +65,6 @@ def page_analyse_retards(
         df_delay[COL_DELAY], errors="coerce"
     ).clip(CLIP_MIN, CLIP_MAX)
 
-
     # Header
     svg = read_logo("getaround_logo.svg")
     if svg:
