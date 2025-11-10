@@ -1,0 +1,21 @@
+{
+  "numeric": [
+    "mileage",
+    "engine_power"
+  ],
+  "categorical": [
+    "model_key",
+    "fuel_grouped",
+    "paint_color",
+    "car_type"
+  ],
+  "boolean": [
+    "private_parking_available",
+    "has_gps",
+    "has_air_conditioning",
+    "automatic_car",
+    "has_getaround_connect",
+    "has_speed_regulator",
+    "winter_tires"
+  ]
+}

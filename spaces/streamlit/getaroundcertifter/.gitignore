@@ -1,0 +1,5 @@
+# Variables d'environnement
+.env
+
+# Scripts shell
+*.sh

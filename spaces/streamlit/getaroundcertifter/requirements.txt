@@ -1,0 +1,9 @@
+altair
+pandas
+streamlit
+plotly
+matplotlib
+numpy
+seaborn
+openpyxl
+requests
