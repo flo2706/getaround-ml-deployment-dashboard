@@ -67,14 +67,6 @@ L’ensemble du pipeline de suivi et de déploiement repose sur **MLflow**, qui 
 **Suivi du modèle :**  
 [Suivi MLflow sur Hugging Face](https://huggingface.co/spaces/flodussart/getaround_mlflow)
 
-Les artefacts (modèles entraînés, métriques, configurations) sont versionnés et sauvegardés automatiquement via :
-
-- MLflow Tracking (expérimentations et métriques) :  
-[**Suivi du modèle**](https://huggingface.co/spaces/flodussart/getaround_mlflow)
-
-- Amazon S3 (stockage des artefacts du modèle)  
-- Neon DB (PostgreSQL) pour le suivi des runs et la persistance des métadonnées
-
 ---
 ##  API de prédiction
 
