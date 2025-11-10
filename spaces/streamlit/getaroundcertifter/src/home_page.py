@@ -79,7 +79,9 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     ):
         return
 
-    if not require_cols(pricing_scoped, {"rental_price_per_day"}, "pricing (scope selected)"):
+    if not require_cols(
+        pricing_scoped, {"rental_price_per_day"}, "pricing (scope selected)"
+    ):
         return
 
     # KPI Overview
@@ -271,4 +273,3 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
             st.plotly_chart(fig_box, use_container_width=True)
         else:
             st.info("Colonne 'car_type' absente — Boxplot non disponible.")
-

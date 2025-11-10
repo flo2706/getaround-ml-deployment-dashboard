@@ -46,7 +46,7 @@ def router() -> None:
 
     elif page == "Prédiction des prix":
         try:
-            page_prediction()  
+            page_prediction()
         except Exception as exc:  # pragma: no cover — shown in Streamlit
             st.error("Impossible de charger la page de prédiction.")
             st.exception(exc)

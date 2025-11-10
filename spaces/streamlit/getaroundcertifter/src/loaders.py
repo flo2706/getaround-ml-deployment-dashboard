@@ -124,7 +124,9 @@ def predict_rows(rows: list[dict[str, Any]]) -> list[float]:
         # Fallback if API rejects 'rows' with a validation error (commonly 422)
         if exc.response is not None and exc.response.status_code == 422:
             matrix = [list(r.values()) for r in rows]
-            resp = requests.post(url, json={"input": matrix}, headers=headers, timeout=20)
+            resp = requests.post(
+                url, json={"input": matrix}, headers=headers, timeout=20
+            )
             resp.raise_for_status()
             data = resp.json() or {}
             preds = data.get("prediction") or data.get("predictions")

@@ -21,16 +21,16 @@ COL_STATE = "state"
 # Clipping bounds (minutes) used across the app for delay visualizations
 CLIP_MIN, CLIP_MAX = -500, 1000
 
-# Order of checkout status labels used in charts 
+# Order of checkout status labels used in charts
 ORDER_STATUS = ["En avance", "À l'heure", "En retard"]
 
 # Brand/color palette (kept centralized for visual consistency)
-BRAND_BLUE = "#2563eb"     # default series color
-MOBILE_BLUE = "#3b82f6"    # mobile
+BRAND_BLUE = "#2563eb"  # default series color
+MOBILE_BLUE = "#3b82f6"  # mobile
 CONNECT_AMBER = "#f59e0b"  # connect
 SUCCESS_GREEN = "#10b981"  # on-time/early
-DANGER_RED = "#ef4444"     # late
-GREY_NEUTRAL = "#9ca3af"   # neutral
+DANGER_RED = "#ef4444"  # late
+GREY_NEUTRAL = "#9ca3af"  # neutral
 TEXT_DARK = "#374151"
 GRID_GREY = "#e5e7eb"
 BG_LIGHT = "#f8fafc"
@@ -44,11 +44,11 @@ RESA_COLORS = {
 # Check-in type colors
 COLOR_CI = {"mobile": MOBILE_BLUE, "connect": CONNECT_AMBER}
 
-# Checkout status colors 
+# Checkout status colors
 STATUS_COLORS = {
-    "En avance": "#60a5fa",     
-    "À l'heure": SUCCESS_GREEN,  
-    "En retard": DANGER_RED,     
+    "En avance": "#60a5fa",
+    "À l'heure": SUCCESS_GREEN,
+    "En retard": DANGER_RED,
     "Non renseigné": GREY_NEUTRAL,
 }
 
@@ -108,7 +108,7 @@ def place_title(fig, text: str, *, y: float = 0.95) -> None:
     fig.update_layout(
         title=dict(text=text, x=0.5, y=y, xanchor="center", yanchor="top"),
         margin=dict(t=70),
-    ) 
+    )
 
 
 def require_cols(df: pd.DataFrame, cols: set[str], label: str) -> bool:
@@ -201,6 +201,7 @@ def apply_scope(
 
 # Cached aggregations
 
+
 @st.cache_data(show_spinner=False)
 def state_pct(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
     """Compute the percentage breakdown of booking states.
@@ -287,6 +288,7 @@ def checkout_counts(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
 
 
 # Analytics helpers
+
 
 def pick_value(df_long: pd.DataFrame, label: str, t: int) -> float:
     """Safely pick a single y-value in a long-format curve at threshold t.

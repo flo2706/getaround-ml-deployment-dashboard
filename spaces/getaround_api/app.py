@@ -61,8 +61,8 @@ app = FastAPI(
         "Prédiction du prix journalier de location.\n\n"
         "• Dashboard : https://flodussart-getaroundcertifter.hf.space\n\n"
         "• Endpoint ML : `POST /predict`\n\n"
-        " - Format recommandé : {\"input\": [[...], ...]} (ordre strict des features)\n\n "
-        " - Format enrichi (optionnel) : {\"rows\": [...] }.\n"
+        ' - Format recommandé : {"input": [[...], ...]} (ordre strict des features)\n\n '
+        ' - Format enrichi (optionnel) : {"rows": [...] }.\n'
     ),
     version="1.0",
     docs_url="/docs",
@@ -72,7 +72,7 @@ app = FastAPI(
 # Authorized origins — Streamlit app and local dev
 origins = [
     "https://flodussart-getaroundcertifter.hf.space",  # Streamlit dashboard on Hugging Face
-    "http://localhost:8501",                           # local Streamlit testing
+    "http://localhost:8501",  # local Streamlit testing
 ]
 
 app.add_middleware(
@@ -87,14 +87,12 @@ app.add_middleware(
 try:
     model = mlflow.pyfunc.load_model(LOCAL_MODEL_PATH)
 except Exception as e:
-    raise RuntimeError(
-        f"Unable to load local MLflow model '{LOCAL_MODEL_PATH}': {e}"
-    )
+    raise RuntimeError(f"Unable to load local MLflow model '{LOCAL_MODEL_PATH}': {e}")
 
 FEATURES: list[str] = load_features_from_artifacts(LOCAL_MODEL_PATH)
 
 
-# Pydantic schemas 
+# Pydantic schemas
 ALLOWED_FUEL = {"diesel", "petrol", "other"}
 ALLOWED_PAINT = {
     "black",
@@ -165,6 +163,7 @@ class PredictRow(BaseModel):
     """
     Input schema aligned with grouped features used during training.
     """
+
     mileage: float
     engine_power: float
     model_key: str
@@ -238,13 +237,12 @@ class PredictPayload(BaseModel):
     - 'rows' is validated/normalized by Pydantic.
     - 'input' requires strict column ordering as in `FEATURES`.
     """
+
     rows: Optional[list[PredictRow]] = Field(default=None)
     input: Optional[list[list[Any]]] = Field(
         default=None,
         description=(
-            "Format legacy: matrix. Each row must follow ordering: {}".format(
-                FEATURES
-            )
+            "Format legacy: matrix. Each row must follow ordering: {}".format(FEATURES)
         ),
     )
 
@@ -254,7 +252,7 @@ class PredictPayload(BaseModel):
 def root() -> dict[str, Any]:
     """Root endpoint with basic metadata."""
     return {
-        "status" : "running",
+        "status": "running",
         "message": "Bienvenue sur l’API Getaround 🚗 — utilisez POST /predict",
         "docs": "/docs",
         "dashboard": "https://flodussart-getaroundcertifter.hf.space",
@@ -314,7 +312,9 @@ def predict(payload: PredictPayload) -> dict[str, list[float]]:
     try:
         df = build_df_from_payload(payload)
         y_hat = model.predict(df)
-        preds = [float(x) for x in (y_hat.tolist() if hasattr(y_hat, "tolist") else y_hat)]
+        preds = [
+            float(x) for x in (y_hat.tolist() if hasattr(y_hat, "tolist") else y_hat)
+        ]
         return {"prediction": preds}
     except HTTPException:
         # Re-raise HTTP 4xx errors as-is

@@ -16,23 +16,60 @@ pio.templates.default = "getaround"
 
 # Allowed values (must match API-side validation)
 MODEL_KEYS: list[str] = [
-    "citroen", "renault", "bmw", "peugeot", "audi", "nissan", "mitsubishi",
-    "mercedes", "volkswagen", "toyota", "seat", "subaru", "pgo", "opel",
-    "ferrari", "maserati", "suzuki", "ford", "porsche", "alfa romeo",
-    "kia motors", "fiat", "lamborghini", "lexus", "honda", "mazda",
-    "mini", "yamaha"
+    "citroen",
+    "renault",
+    "bmw",
+    "peugeot",
+    "audi",
+    "nissan",
+    "mitsubishi",
+    "mercedes",
+    "volkswagen",
+    "toyota",
+    "seat",
+    "subaru",
+    "pgo",
+    "opel",
+    "ferrari",
+    "maserati",
+    "suzuki",
+    "ford",
+    "porsche",
+    "alfa romeo",
+    "kia motors",
+    "fiat",
+    "lamborghini",
+    "lexus",
+    "honda",
+    "mazda",
+    "mini",
+    "yamaha",
 ]
 
 FUEL: list[str] = ["diesel", "petrol", "other"]
 
 PAINT: list[str] = [
-    "black", "grey", "blue", "white", "brown", "silver",
-    "red", "beige", "green", "orange"
+    "black",
+    "grey",
+    "blue",
+    "white",
+    "brown",
+    "silver",
+    "red",
+    "beige",
+    "green",
+    "orange",
 ]
 
 CAR_TYPES: list[str] = [
-    "estate", "sedan", "suv", "hatchback", "subcompact",
-    "coupe", "convertible", "van"
+    "estate",
+    "sedan",
+    "suv",
+    "hatchback",
+    "subcompact",
+    "coupe",
+    "convertible",
+    "van",
 ]
 
 MODEL_KEY_LABELS = {
@@ -98,6 +135,7 @@ CAR_TYPE_LABELS = {
     "van": "Van / Monospace",
 }
 
+
 # Helper functions
 @st.cache_data(show_spinner=False)
 def _safe_fetch_api_info() -> dict[str, Any]:
@@ -151,7 +189,7 @@ def page_prediction() -> None:
     )
     st.divider()
 
-    # Prepare sorted choices for UI 
+    # Prepare sorted choices for UI
     sorted_model_keys = sorted(
         MODEL_KEYS,
         key=lambda x: MODEL_KEY_LABELS.get(x, x).lower(),
@@ -297,4 +335,3 @@ def page_prediction() -> None:
                 f"-d '{json.dumps(payload_input)}'",
                 language="bash",
             )
-

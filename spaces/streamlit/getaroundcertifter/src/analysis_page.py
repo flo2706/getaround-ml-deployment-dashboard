@@ -30,6 +30,7 @@ from common import (
 pio.templates["getaround"] = get_plotly_theme()
 pio.templates.default = "getaround"
 
+
 # Helpers
 def _legend_bottom(fig, y: float = -0.25) -> None:
     """Put legend horizontally below the plot."""
@@ -125,9 +126,19 @@ def page_analyse_retards(
         observed = ended.dropna(subset=["delay_clipped"]).copy()
         late_only = ended[ended["delay_clipped"] > 0].copy()
 
-        median_delay = float(late_only["delay_clipped"].median()) if not late_only.empty else 0.0
-        pct_gt_60_among_lates = (late_only["delay_clipped"] > 60).mean() * 100.0 if not late_only.empty else 0.0
-        pct_gt_60_among_observed = (observed["delay_clipped"] > 60).mean() * 100.0 if not observed.empty else 0.0
+        median_delay = (
+            float(late_only["delay_clipped"].median()) if not late_only.empty else 0.0
+        )
+        pct_gt_60_among_lates = (
+            (late_only["delay_clipped"] > 60).mean() * 100.0
+            if not late_only.empty
+            else 0.0
+        )
+        pct_gt_60_among_observed = (
+            (observed["delay_clipped"] > 60).mean() * 100.0
+            if not observed.empty
+            else 0.0
+        )
 
         # Pie
         with col_a:
@@ -148,7 +159,9 @@ def page_analyse_retards(
             )
             _place_title(fig_pie, "Statut du retour (avec Non renseigné)")
             _legend_bottom(fig_pie)
-            fig_pie.update_traces(sort=False, textposition="outside", textinfo="percent+label")
+            fig_pie.update_traces(
+                sort=False, textposition="outside", textinfo="percent+label"
+            )
             st.plotly_chart(fig_pie, use_container_width=True)
 
             st.caption(
@@ -171,14 +184,16 @@ def page_analyse_retards(
                     labels={"delay_clipped": "Retard au checkout (mn, borné)"},
                 )
                 _place_title(fig_hist, "Distribution des retards (minutes)")
-                _legend_bottom(fig_hist) 
+                _legend_bottom(fig_hist)
                 fig_hist.update_layout(plot_bgcolor="white")
                 st.plotly_chart(fig_hist, use_container_width=True)
 
         # KPIs
         with col_c:
             st.metric("Retard médian", f"{median_delay:.1f} min")
-            st.metric("Retard > 1h (parmi les retards)", f"{pct_gt_60_among_lates:.1f} %")
+            st.metric(
+                "Retard > 1h (parmi les retards)", f"{pct_gt_60_among_lates:.1f} %"
+            )
             st.caption(
                 "Retard > 1h parmi toutes les ‘ended’ observées : "
                 f"{pct_gt_60_among_observed:.1f} %"
@@ -193,9 +208,13 @@ def page_analyse_retards(
     y_max_vis = 1000
 
     ended_scoped = df_scoped[df_scoped[COL_STATE] == "ended"].copy()
-    ended_scoped = ended_scoped[ended_scoped[COL_CHECKIN].isin(["mobile", "connect"])].copy()
+    ended_scoped = ended_scoped[
+        ended_scoped[COL_CHECKIN].isin(["mobile", "connect"])
+    ].copy()
 
-    if {COL_RENTAL_ID, COL_PREV_ID}.issubset(ended_scoped.columns) and not ended_scoped.empty:
+    if {COL_RENTAL_ID, COL_PREV_ID}.issubset(
+        ended_scoped.columns
+    ) and not ended_scoped.empty:
         next_map = (
             ended_scoped.dropna(subset=[COL_PREV_ID])
             .set_index(COL_PREV_ID)[COL_RENTAL_ID]
@@ -209,7 +228,9 @@ def page_analyse_retards(
     has_next = ended_scoped.dropna(subset=["next_rental_id"]).copy()
 
     if not has_next.empty:
-        has_next["next_rental_id"] = pd.to_numeric(has_next["next_rental_id"], errors="coerce").astype("Int64")
+        has_next["next_rental_id"] = pd.to_numeric(
+            has_next["next_rental_id"], errors="coerce"
+        ).astype("Int64")
         has_next["next_delay"] = has_next["next_rental_id"].map(delay_map)
         has_next = has_next.dropna(subset=["delay_clipped", "next_delay"]).copy()
         has_next = has_next[has_next["next_delay"] >= 0].copy()
@@ -266,7 +287,11 @@ def page_analyse_retards(
 
     preset = st.segmented_control("Presets", options=[10, 30, 60, 90], default=60)
     threshold_min = st.slider(
-        "Seuil (buffer) en minutes", min_value=0, max_value=180, value=int(preset), step=5
+        "Seuil (buffer) en minutes",
+        min_value=0,
+        max_value=180,
+        value=int(preset),
+        step=5,
     )
     st.caption(
         "Le buffer masque les créneaux où l'écart entre deux locations est inférieur au seuil défini ci-dessus."
@@ -309,11 +334,19 @@ def page_analyse_retards(
         fig_loss.update_yaxes(
             range=[0, 100], tickvals=[0, 20, 40, 60, 80, 100], ticksuffix=" %"
         )
-        fig_loss.add_vline(x=threshold_min, line_dash="dash", line_color="#666", opacity=0.7)
-        fig_loss.add_vrect(x0=0, x1=threshold_min, fillcolor="#777", opacity=0.06, line_width=0)
+        fig_loss.add_vline(
+            x=threshold_min, line_dash="dash", line_color="#666", opacity=0.7
+        )
+        fig_loss.add_vrect(
+            x0=0, x1=threshold_min, fillcolor="#777", opacity=0.06, line_width=0
+        )
         fig_loss.update_traces(hovertemplate="%{y:.1f} % à %{x} min")
         fig_loss.add_annotation(
-            x=threshold_min, yref="paper", y=1.05, text=f"Seuil = {threshold_min} mn", showarrow=False
+            x=threshold_min,
+            yref="paper",
+            y=1.05,
+            text=f"Seuil = {threshold_min} mn",
+            showarrow=False,
         )
         fig_loss.add_annotation(
             xref="paper",
@@ -359,8 +392,12 @@ def page_analyse_retards(
         fig_solved.update_yaxes(
             range=[0, 100], tickvals=[0, 20, 40, 60, 80, 100], ticksuffix=" %"
         )
-        fig_solved.add_vline(x=threshold_min, line_dash="dash", line_color="#666", opacity=0.7)
-        fig_solved.add_vrect(x0=0, x1=threshold_min, fillcolor="#777", opacity=0.06, line_width=0)
+        fig_solved.add_vline(
+            x=threshold_min, line_dash="dash", line_color="#666", opacity=0.7
+        )
+        fig_solved.add_vrect(
+            x0=0, x1=threshold_min, fillcolor="#777", opacity=0.06, line_width=0
+        )
         fig_solved.update_traces(hovertemplate="%{y:.1f} % à %{x} min")
         fig_solved.update_layout(plot_bgcolor="white")
         st.plotly_chart(fig_solved, use_container_width=True)
@@ -380,11 +417,11 @@ def page_analyse_retards(
         )
 
     csv_export = pd.concat(
-    [
-        loss_curve.assign(type_courbe="Masquées (%)"),
-        solved_curve.assign(type_courbe="Évités (%)"),
-    ],
-    ignore_index=True,
+        [
+            loss_curve.assign(type_courbe="Masquées (%)"),
+            solved_curve.assign(type_courbe="Évités (%)"),
+        ],
+        ignore_index=True,
     )
 
     st.download_button(
@@ -439,13 +476,21 @@ def page_analyse_retards(
             )
             return
 
-        if scope == "Connect uniquement" and "has_getaround_connect" in dataset_pricing.columns:
+        if (
+            scope == "Connect uniquement"
+            and "has_getaround_connect" in dataset_pricing.columns
+        ):
             mean_daily_price = dataset_pricing.loc[
-                dataset_pricing["has_getaround_connect"] == True, price_col  # noqa: E712
+                dataset_pricing["has_getaround_connect"],
+                price_col,
             ].mean()
-        elif scope == "Mobile uniquement" and "has_getaround_connect" in dataset_pricing.columns:
+        elif (
+            scope == "Mobile uniquement"
+            and "has_getaround_connect" in dataset_pricing.columns
+        ):
             mean_daily_price = dataset_pricing.loc[
-                dataset_pricing["has_getaround_connect"] == False, price_col  # noqa: E712
+                ~dataset_pricing["has_getaround_connect"],
+                price_col,
             ].mean()
         else:
             mean_daily_price = dataset_pricing[price_col].mean()
