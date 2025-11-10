@@ -86,8 +86,7 @@ Espace Hugging Face :
 
 ## Suivi du modèle (MLflow)
 
-Le suivi du modèle (versions, métriques, paramètres) a été mis en place sur MLflow, déployé sur un espace Hugging Face dédié.
-
+Le suivi du modèle (versions, métriques, paramètres) a été mis en place sur MLflow, déployé sur un espace Hugging Face dédié : 
 [**Suivi du modèle**](https://huggingface.co/spaces/flodussart/getaround_mlflow)
 
 
