@@ -88,7 +88,7 @@ Espace Hugging Face :
 [**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundapicertif)
 
 ---
-## Données utilisées
+## Sources de données :  
 
 Deux jeux de données hébergés sur Hugging Face Datasets assurent la traçabilité et la reproductibilité du projet :
 
