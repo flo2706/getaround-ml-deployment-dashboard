@@ -59,7 +59,7 @@ app = FastAPI(
     title="🚗 Getaround Pricing API",
     description=(
         "Prédiction du prix journalier de location.\n\n"
-        "• Dashboard : https://flodussart-getaroundcertifter.hf.space\n\n"
+        "• Dashboard : https://flodussart-getaround-delay-pricing-dashboard.hf.space\n\n"
         "• Endpoint ML : `POST /predict`\n\n"
         ' - Format recommandé : {"input": [[...], ...]} (ordre strict des features)\n\n '
         ' - Format enrichi (optionnel) : {"rows": [...] }.\n'
@@ -71,7 +71,7 @@ app = FastAPI(
 
 # Authorized origins — Streamlit app and local dev
 origins = [
-    "https://flodussart-getaroundcertifter.hf.space",  # Streamlit dashboard on Hugging Face
+    "https://flodussart-getaround-delay-pricing-dashboard.hf.space",  # Streamlit dashboard on Hugging Face
     "http://localhost:8501",  # local Streamlit testing
 ]
 
@@ -249,7 +249,7 @@ def root() -> dict[str, Any]:
         "status": "running",
         "message": "Bienvenue sur l’API Getaround 🚗 — utilisez POST /predict",
         "docs": "/docs",
-        "dashboard": "https://flodussart-getaroundcertifter.hf.space",
+        "dashboard": "https://flodussart-getaround-delay-pricing-dashboard.hf.space",
         "model_path": LOCAL_MODEL_PATH,
         "features": FEATURES,
     }
