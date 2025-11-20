@@ -82,9 +82,9 @@ L’API permet de générer des **prédictions de prix optimaux** à partir des 
 }
 ```
 Documentation interactive :  
-[**Documentation de l'API sur Hugging Face**](https://flodussart-getaroundapicertif.hf.space/docs)
+[**Documentation de l'API sur Hugging Face**](https://flodussart-getaround-delay-pricing-api.hf.space/docs)
 
-Espace Hugging Face :  
+Espace Hugging Face (Dashboard)
 [**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaround-delay-pricing-dashboard)
 
 ---
@@ -111,5 +111,4 @@ Deux jeux de données hébergés sur Hugging Face Datasets assurent la traçabil
 | **Docker**                | Conteneurisation pour un déploiement reproductible   |
 
 ---
-## Accès au dashboard :  
-[**Getaround Dashboard sur Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundcertifter)
+
