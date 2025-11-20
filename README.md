@@ -85,7 +85,7 @@ Documentation interactive :
 [**Documentation de l'API sur Hugging Face**](https://flodussart-getaroundapicertif.hf.space/docs)
 
 Espace Hugging Face :  
-[**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaroundapicertif)
+[**Espace Hugging Face**](https://huggingface.co/spaces/flodussart/getaround-delay-pricing-dashboard)
 
 ---
 ## Sources de données :  
