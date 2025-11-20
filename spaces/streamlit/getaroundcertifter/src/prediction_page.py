@@ -182,7 +182,7 @@ def page_prediction() -> None:
 
     st.link_button(
         "📘 Ouvrir la documentation API",
-        "https://flodussart-getaroundapicertif.hf.space/docs",
+        "https://flodussart-getaround-delay-pricing-api.hf.space/docs",
     )
     st.divider()
 
@@ -312,7 +312,7 @@ def page_prediction() -> None:
         with st.expander("Exemple curl (format rows)"):
             st.code(
                 "curl -s -H 'Content-Type: application/json' "
-                "-X POST https://flodussart-getaroundapicertif.hf.space/predict "
+                "-X POST https://flodussart-getaround-delay-pricing-api.hf.space/predict "
                 f"-d '{json.dumps(payload_rows)}'",
                 language="bash",
             )
@@ -328,7 +328,7 @@ def page_prediction() -> None:
         with st.expander("Exemple curl (format input)"):
             st.code(
                 "curl -s -H 'Content-Type: application/json' "
-                "-X POST https://flodussart-getaroundapicertif.hf.space/predict "
+                "-X POST https://flodussart-getaround-delay-pricing-api.hf.space/predict "
                 f"-d '{json.dumps(payload_input)}'",
                 language="bash",
             )

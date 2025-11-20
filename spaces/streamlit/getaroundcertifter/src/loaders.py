@@ -21,7 +21,7 @@ CSV_URL: str = os.getenv(
 
 API_URL: str = os.getenv(
     "GETAROUND_API_URL",
-    "https://flodussart-getaroundapicertif.hf.space",
+    "https://flodussart-getaround-delay-pricing-api.hf.space",
 )
 
 
