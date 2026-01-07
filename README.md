@@ -114,5 +114,5 @@ Deux jeux de données hébergés sur Hugging Face Datasets assurent la traçabil
 
 ## Contexte
 
-Projet réalisé dans le cadre de la certification  
+Projet réalisé dans le cadre du bloc "Deployment" de la certification  
 **« Concepteur Développeur en Sciences des Données » (RNCP 35288 – Jedha)**.
