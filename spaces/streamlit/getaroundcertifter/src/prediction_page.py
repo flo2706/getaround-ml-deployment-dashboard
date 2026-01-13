@@ -139,7 +139,7 @@ def _safe_fetch_api_info() -> dict[str, Any]:
     """Safely fetch model metadata from API with caching and error handling."""
     try:
         return fetch_api_info() or {}
-    except Exception as exc:  # pragma: no cover
+    except Exception as exc:  
         st.warning("Impossible de récupérer les métadonnées de l’API.")
         st.exception(exc)
         return {}

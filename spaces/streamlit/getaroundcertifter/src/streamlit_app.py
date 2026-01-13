@@ -1,11 +1,7 @@
 # streamlit_app.py
 from __future__ import annotations
 
-# import importlib
-# from typing import NoReturn
-
 import streamlit as st
-
 from loaders import load_pricing, load_delay
 from home_page import main_page
 from analysis_page import page_analyse_retards
@@ -16,16 +12,8 @@ st.set_page_config(page_title="GetAround Project", page_icon="🚗", layout="wid
 
 
 def router() -> None:
-    """
-    Main router for the dashboard.
-
-    Notes
-    -----
-    - Datasets are loaded once via loaders (which can use @st.cache_data).
-    - We keep loader calls outside of try/except so errors are visible.
-    - Each page is responsible for its own data guards and warnings.
-    """
-    # Load datasets (errors bubble up to Streamlit error box if any)
+    """Main router: load data once, handle sidebar navigation, and dispatch pages."""
+    # Load shared datasets once (cached in `loaders.py`)
     dataset_pricing = load_pricing()
     df_delay = load_delay()
 
@@ -37,7 +25,6 @@ def router() -> None:
         index=0,
     )
 
-    # Route
     if page == "Accueil":
         main_page(dataset_pricing, df_delay)
 
@@ -47,7 +34,7 @@ def router() -> None:
     elif page == "Prédiction des prix":
         try:
             page_prediction()
-        except Exception as exc:  # pragma: no cover — shown in Streamlit
+        except Exception as exc:  
             st.error("Impossible de charger la page de prédiction.")
             st.exception(exc)
             st.info(
@@ -60,7 +47,7 @@ def router() -> None:
 
 
 def main() -> None:
-    """Small indirection to support `python streamlit_app.py` if needed."""
+    """Entry-point wrapper (useful for local execution and tooling)."""
     router()
 
 

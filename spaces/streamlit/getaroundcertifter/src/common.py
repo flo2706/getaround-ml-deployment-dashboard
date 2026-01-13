@@ -10,13 +10,17 @@ import streamlit as st
 
 # Constants
 
-# Column names (dataset schema)
-COL_DELAY = "delay_at_checkout_in_minutes"
+# Column names 
+COL_DELAY_AT_CHECKOUT = "delay_at_checkout_in_minutes"
 COL_GAP = "time_delta_with_previous_rental_in_minutes"
 COL_CHECKIN = "checkin_type"
 COL_RENTAL_ID = "rental_id"
 COL_PREV_ID = "previous_ended_rental_id"
 COL_STATE = "state"
+COL_HAS_CONNECT = "has_getaround_connect"
+COL_CAR_ID = "car_id"
+COL_PRICE_PER_DAY = 'rental_price_per_day'
+COL_CAR_TYPE = 'car_type'
 
 # Clipping bounds (minutes) used across the app for delay visualizations
 CLIP_MIN, CLIP_MAX = -500, 1000
@@ -26,8 +30,8 @@ ORDER_STATUS = ["En avance", "À l'heure", "En retard"]
 
 # Brand/color palette (kept centralized for visual consistency)
 BRAND_BLUE = "#2563eb"  # default series color
-MOBILE_BLUE = "#3b82f6"  # mobile
-CONNECT_AMBER = "#f59e0b"  # connect
+MOBILE_BLUE = "#3b82f6"  
+CONNECT_AMBER = "#f59e0b"  
 SUCCESS_GREEN = "#10b981"  # on-time/early
 DANGER_RED = "#ef4444"  # late
 GREY_NEUTRAL = "#9ca3af"  # neutral
@@ -54,12 +58,13 @@ STATUS_COLORS = {
 
 __all__ = [
     # columns
-    "COL_DELAY",
+    "COL_DELAY_AT_CHECKOUT",
     "COL_GAP",
     "COL_CHECKIN",
     "COL_RENTAL_ID",
     "COL_PREV_ID",
     "COL_STATE",
+    "COL_HAS_CONNECT",
     # constants
     "CLIP_MIN",
     "CLIP_MAX",
@@ -83,11 +88,10 @@ __all__ = [
 
 
 def get_plotly_theme() -> dict:
-    """Return a minimal Plotly template aligned with the dashboard styles.
+    """Minimal Plotly theme shared across the dashboard.
 
-    Notes
-    -----
-    - Keep the theme small and predictable; charts can still override layout.
+    Goal: ensure visual consistency (fonts, colors, grids) while keeping
+    charts free to override layout details when needed.
     """
     return {
         "layout": {
@@ -104,7 +108,7 @@ def get_plotly_theme() -> dict:
 
 # Utility helpers
 def place_title(fig, text: str, *, y: float = 0.95) -> None:
-    """Place chart title identically across all figures."""
+    """Standardize title positioning for visual consistency across charts."""
     fig.update_layout(
         title=dict(text=text, x=0.5, y=y, xanchor="center", yanchor="top"),
         margin=dict(t=70),
@@ -112,22 +116,7 @@ def place_title(fig, text: str, *, y: float = 0.95) -> None:
 
 
 def require_cols(df: pd.DataFrame, cols: set[str], label: str) -> bool:
-    """Validate that required columns exist in a dataframe.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Input dataframe to validate.
-    cols : set[str]
-        Required column names.
-    label : str
-        Friendly dataframe label displayed in Streamlit warnings.
-
-    Returns
-    -------
-    bool
-        True if all columns are present, False otherwise (with a Streamlit warning).
-    """
+    """Fail fast if required columns are missing and surface a Streamlit warning."""
     missing = cols - set(df.columns)
     if missing:
         st.warning(f"Colonnes manquantes dans {label} : {sorted(missing)}")
@@ -136,18 +125,7 @@ def require_cols(df: pd.DataFrame, cols: set[str], label: str) -> bool:
 
 
 def read_logo(name: str = "getaround_logo.svg") -> Optional[str]:
-    """Read an SVG file colocated with this module and return its content.
-
-    Parameters
-    ----------
-    name : str
-        SVG filename to read (default: 'getaround_logo.svg').
-
-    Returns
-    -------
-    Optional[str]
-        SVG text content, or None if not found/readable.
-    """
+    """Safely load a local SVG asset bundled with the app (returns None if unavailable)."""
     try:
         path = Path(__file__).resolve().parent / name
         return path.read_text(encoding="utf-8")
@@ -160,59 +138,36 @@ def apply_scope(
     pricing: pd.DataFrame,
     scope: str,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Apply a business scope filter to both delay and pricing datasets.
-
-    Parameters
-    ----------
-    df_delay : pd.DataFrame
-        Delay/ops dataframe (includes states, check-in type, etc.).
-    pricing : pd.DataFrame
-        Pricing dataframe (includes daily price, connect flag, etc.).
-    scope : str
-        One of {"Toutes les voitures", "Connect uniquement", "Mobile uniquement"}.
-
-    Returns
-    -------
-    tuple[pd.DataFrame, pd.DataFrame]
-        (filtered_delay_df, filtered_pricing_df)
-    """
+    """Apply the selected scope consistently to both delay and pricing datasets."""
     df = df_delay.copy()
     pr = pricing.copy()
 
     # Normalize boolean for the connect flag if present
-    if "has_getaround_connect" in pr.columns:
-        pr["has_getaround_connect"] = (
-            pr["has_getaround_connect"].astype("boolean").fillna(False)
+    if COL_HAS_CONNECT in pr.columns:
+        pr[COL_HAS_CONNECT] = (
+            pr[COL_HAS_CONNECT].astype("boolean").fillna(False)
         )
 
     if scope == "Connect uniquement":
-        if "checkin_type" in df.columns:
-            df = df[df["checkin_type"].eq("connect")].copy()
-        if "has_getaround_connect" in pr.columns:
-            pr = pr[pr["has_getaround_connect"]].copy()
+        if COL_CHECKIN in df.columns:
+            df = df[df[COL_CHECKIN].eq("connect")].copy()
+        if COL_HAS_CONNECT in pr.columns:
+            pr = pr[pr[COL_HAS_CONNECT]].copy()
 
     elif scope == "Mobile uniquement":
-        if "checkin_type" in df.columns:
-            df = df[df["checkin_type"].eq("mobile")].copy()
+        if COL_CHECKIN in df.columns:
+            df = df[df[COL_CHECKIN].eq("mobile")].copy()
         # No safe "mobile-only" filter on the pricing dataset; keep as is.
 
     return df, pr
 
 
 # Cached aggregations
-
-
 @st.cache_data(show_spinner=False)
 def state_pct(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
-    """Compute the percentage breakdown of booking states.
-
-    Returns
-    -------
-    pd.DataFrame
-        Tidy dataframe with columns ['Statut de réservation', 'Pourcentage'].
-    """
+    """Compute the percentage breakdown of booking states."""
     return (
-        df_delay_scoped["state"]
+        df_delay_scoped[COL_STATE]
         .dropna()
         .value_counts(normalize=True)
         .mul(100)
@@ -223,15 +178,9 @@ def state_pct(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
 
 @st.cache_data(show_spinner=False)
 def checkin_pct(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
-    """Compute the percentage breakdown of check-in types.
-
-    Returns
-    -------
-    pd.DataFrame
-        Tidy dataframe with columns ['Type de check-in', 'Pourcentage'].
-    """
+    """Compute the percentage breakdown of check-in types."""
     return (
-        df_delay_scoped["checkin_type"]
+        df_delay_scoped[COL_CHECKIN]
         .dropna()
         .value_counts(normalize=True)
         .mul(100)
@@ -242,21 +191,10 @@ def checkin_pct(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
 
 @st.cache_data(show_spinner=False)
 def checkout_counts(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
-    """Count checkout status (early/on-time/late) per check-in type.
-
-    Notes
-    -----
-    - Returns an empty-but-typed dataframe if no valid rows exist to keep
-      downstream Plotly code from breaking.
-
-    Returns
-    -------
-    pd.DataFrame
-        Columns: ['checkin_type', 'checkout_status', 'n', 'pct', 'total_type'].
-    """
-    cols = ["checkin_type", "delay_at_checkout_in_minutes"]
+    """Aggregate checkout outcomes (early/on-time/late) by check-in type for KPI charts."""
+    cols = [COL_CHECKIN, COL_DELAY_AT_CHECKOUT]
     df = df_delay_scoped.loc[
-        df_delay_scoped["delay_at_checkout_in_minutes"].notna(), cols
+        df_delay_scoped[COL_DELAY_AT_CHECKOUT].notna(), cols
     ].copy()
 
     if df.empty:
@@ -271,44 +209,28 @@ def checkout_counts(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
         )
 
     df["checkout_status"] = pd.cut(
-        df["delay_at_checkout_in_minutes"],
+        df[COL_DELAY_AT_CHECKOUT],
         bins=[-1e9, -1e-9, 1e-9, 1e9],
         labels=ORDER_STATUS,
         include_lowest=True,
     )
 
     counts = (
-        df.groupby(["checkin_type", "checkout_status"], observed=True)
+        df.groupby([COL_CHECKIN, "checkout_status"], observed=True)
         .size()
         .reset_index(name="n")
     )
-    counts["total_type"] = counts.groupby("checkin_type")["n"].transform("sum")
+    counts["total_type"] = counts.groupby(COL_CHECKIN)["n"].transform("sum")
     counts["pct"] = counts["n"] / counts["total_type"] * 100
     return counts
 
 
 # Analytics helpers
-
-
 def pick_value(df_long: pd.DataFrame, label: str, t: int) -> float:
-    """Safely pick a single y-value in a long-format curve at threshold t.
+    """Safely extract a metric value from a long-format curve at a given threshold.
 
-    If t is not present in the index, perform a simple linear interpolation
-    between the nearest lower and higher thresholds.
-
-    Parameters
-    ----------
-    df_long : pd.DataFrame
-        Long-format dataframe with columns ['Seuil (min)', 'variable', 'value'].
-    label : str
-        Variable name to filter (e.g., 'Masquées mobile (%)').
-    t : int
-        Threshold (in minutes).
-
-    Returns
-    -------
-    float
-        Interpolated value at t (or boundary value if extrapolated).
+    If the exact threshold is missing, the value is linearly interpolated
+    between the nearest lower and higher available thresholds.
     """
     sub = df_long[df_long["variable"] == label].sort_values("Seuil (min)")
     if sub.empty:
@@ -334,20 +256,13 @@ def pick_value(df_long: pd.DataFrame, label: str, t: int) -> float:
 def build_curves_masked_solved(
     df_gap: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Precompute long-format curves for % masked and % solved vs threshold.
+    """Precompute long-format curves for the gap policy.
 
-    Expected columns in df_gap:
-    - 'delay_clipped' (float): clipped delay at checkout
-    - 'gap' (float): minutes between rentals
-    - 'checkin_type' in {'mobile', 'connect'}
-    - 'was_conflict' (bool): historical conflict, i.e. delay_clipped > gap
+    Returns two long DataFrames (% masked, % avoided conflicts) across thresholds 0..180 minutes.
+    - Masked: gap < t  (base: all rows per check-in type)
+    - Avoided: was_conflict & (gap < t)  (base: conflicts per check-in type)
 
-    The function computes values for thresholds in [0, 180] with a 1-minute step.
-
-    Returns
-    -------
-    (pd.DataFrame, pd.DataFrame)
-        loss_curve, solved_curve
+    Expected columns in df_gap: ['gap', 'was_conflict', COL_CHECKIN].
     """
     thresholds = np.arange(0, 181, 1, dtype=int)
     rows_loss: list[dict] = []

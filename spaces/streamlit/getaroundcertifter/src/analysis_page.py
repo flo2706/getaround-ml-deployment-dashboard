@@ -10,13 +10,15 @@ import streamlit as st
 from common import (
     COLOR_CI,
     COL_CHECKIN,
-    COL_DELAY,
+    COL_DELAY_AT_CHECKOUT,
     COL_GAP,
     COL_PREV_ID,
     COL_RENTAL_ID,
     COL_STATE,
     CLIP_MAX,
     CLIP_MIN,
+    COL_HAS_CONNECT,
+    COL_PRICE_PER_DAY,
     STATUS_COLORS,
     read_logo,
     apply_scope,
@@ -42,27 +44,17 @@ def page_analyse_retards(
     df_delay_full: pd.DataFrame,
     dataset_pricing: pd.DataFrame,
 ) -> None:
-    """
-    Operational analysis page.
-
-    Steps
-    -----
-    1) Global delay distribution.
-    2) Propagation to next rental.
-    3) Product buffer rule (gap < threshold) simulation.
-    4) Business impact (masked share, solved conflicts, revenue proxy).
-
-    """
+    """ Operational analysis page """
 
     # Data preparation
     df_delay = df_delay_full.copy()
 
-    if COL_DELAY not in df_delay.columns:
-        st.warning(f"Colonne '{COL_DELAY}' manquante.")
+    if COL_DELAY_AT_CHECKOUT not in df_delay.columns:
+        st.warning(f"Colonne '{COL_DELAY_AT_CHECKOUT}' manquante.")
         return
 
     df_delay["delay_clipped"] = pd.to_numeric(
-        df_delay[COL_DELAY], errors="coerce"
+        df_delay[COL_DELAY_AT_CHECKOUT], errors="coerce"
     ).clip(CLIP_MIN, CLIP_MAX)
 
     # Header
@@ -452,12 +444,12 @@ def page_analyse_retards(
 
     with col3:
         if ("rental_price_clipped" in dataset_pricing.columns) or (
-            "rental_price_per_day" in dataset_pricing.columns
+            COL_PRICE_PER_DAY in dataset_pricing.columns
         ):
             price_col = (
                 "rental_price_clipped"
                 if "rental_price_clipped" in dataset_pricing.columns
-                else "rental_price_per_day"
+                else COL_PRICE_PER_DAY
             )
         else:
             st.warning(
@@ -467,18 +459,18 @@ def page_analyse_retards(
 
         if (
             scope == "Connect uniquement"
-            and "has_getaround_connect" in dataset_pricing.columns
+            and COL_HAS_CONNECT in dataset_pricing.columns
         ):
             mean_daily_price = dataset_pricing.loc[
-                dataset_pricing["has_getaround_connect"],
+                dataset_pricing[COL_HAS_CONNECT],
                 price_col,
             ].mean()
         elif (
             scope == "Mobile uniquement"
-            and "has_getaround_connect" in dataset_pricing.columns
+            and COL_HAS_CONNECT in dataset_pricing.columns
         ):
             mean_daily_price = dataset_pricing.loc[
-                ~dataset_pricing["has_getaround_connect"],
+                ~dataset_pricing[COL_HAS_CONNECT],
                 price_col,
             ].mean()
         else:

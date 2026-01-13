@@ -28,25 +28,13 @@ API_URL: str = os.getenv(
 # Data loading (cached)
 @st.cache_data(show_spinner=False)
 def load_pricing() -> pd.DataFrame:
-    """Load the pricing CSV from Hugging Face.
-
-    Notes
-    -----
-    - Direct URL reading via pandas is sufficient for public HF datasets.
-    - Minimal parsing so column types are inferred naturally.
-    """
+    """Load the pricing dataset used across the Streamlit app."""
     return pd.read_csv(CSV_URL)
 
 
 @st.cache_data(show_spinner=False)
 def load_delay() -> pd.DataFrame:
-    """Load the delay Excel from Hugging Face.
-
-    Notes
-    -----
-    - Direct URL reading via pandas is sufficient for public HF datasets.
-    - Requires an Excel engine in the environment (e.g., openpyxl).
-    """
+    """Load the rental delay dataset used for operational analyses."""
     return pd.read_excel(XLSX_URL)
 
 
@@ -60,15 +48,7 @@ def _api_url(path: str) -> str:
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def fetch_api_info() -> dict[str, Optional[Any]]:
-    """Fetch model metadata from the API root.
-
-    Returns
-    -------
-    dict
-        A normalized dict with keys 'features' and 'model_path'.
-        On failure, returns {'features': None, 'model_path': None} so the UI
-        can remain usable without hard failing.
-    """
+    """Fetch model metadata from the API root."""
     url = _api_url("/")
     try:
         resp = requests.get(url, timeout=10)
@@ -89,23 +69,6 @@ def predict_rows(rows: list[dict[str, Any]]) -> list[float]:
     This function first tries the modern payload: {"rows": [...]}. If the API
     rejects it with a 422 (validation error), it falls back to the legacy
     matrix payload: {"input": [[...], ...]}.
-
-    Parameters
-    ----------
-    rows : list of dict
-        Each dict must match the API schema (feature: value).
-
-    Returns
-    -------
-    list of float
-        Model predictions as floats.
-
-    Raises
-    ------
-    requests.HTTPError
-        If the HTTP request fails with a non-2xx (other than the handled 422).
-    ValueError
-        If the API response format is unexpected (missing predictions list).
     """
     url = _api_url("/predict")
     headers = {"Content-Type": "application/json"}

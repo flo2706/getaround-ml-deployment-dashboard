@@ -1,12 +1,10 @@
 # 🐍 Base image
 FROM continuumio/miniconda3
 
-# System-level dependencies
 RUN apt-get update && \
     apt-get install -y nano unzip curl gcc g++
 RUN conda install -y python=3.10
 
-# AWS CLI for S3 support
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip && ./aws/install
 
@@ -22,7 +20,6 @@ WORKDIR $HOME/app
 # Copy files with correct permissions
 COPY --chown=user . $HOME/app
 
-# Python dependencies
 COPY requirements.txt /requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r /requirements.txt

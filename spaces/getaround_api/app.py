@@ -71,7 +71,7 @@ app = FastAPI(
 
 # Authorized origins — Streamlit app and local dev
 origins = [
-    "https://flodussart-getaround-delay-pricing-dashboard.hf.space",  # Streamlit dashboard on Hugging Face
+    "https://flodussart-getaround-delay-pricing-dashboard.hf.space",  
     "http://localhost:8501",  # local Streamlit testing
 ]
 

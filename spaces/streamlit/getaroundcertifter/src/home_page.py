@@ -7,9 +7,16 @@ import plotly.io as pio
 import streamlit as st
 
 from common import (
+    COL_STATE,
+    COL_CHECKIN,
+    COL_DELAY_AT_CHECKOUT,
+    COL_CAR_ID,
+    COL_HAS_CONNECT,
+    COL_CAR_TYPE,
     COLOR_CI,
     RESA_COLORS,
     ORDER_STATUS,
+    COL_PRICE_PER_DAY,
     read_logo,
     apply_scope,
     state_pct,
@@ -27,15 +34,7 @@ pio.templates.default = "getaround"
 
 # Page
 def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
-    """
-    Home page of the dashboard — overall KPIs, behavior, pricing structure.
-
-    Rules
-    -----
-    - Scope applied once at the top (All / Connect / Mobile)
-    - Delay KPIs based on state == 'ended' only
-    - On-time/early means delay <= 0 among observed returns
-    """
+    """ Home page of the dashboard — overall KPIs, behavior, pricing structure."""
 
     # Branding area (logo + title)
     svg = read_logo("getaround_logo.svg")
@@ -74,13 +73,13 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
 
     if not require_cols(
         df_scoped,
-        {"state", "checkin_type", "delay_at_checkout_in_minutes", "car_id"},
+        {COL_STATE, COL_CHECKIN, COL_DELAY_AT_CHECKOUT, COL_CAR_ID},
         "df_delay (scope selected)",
     ):
         return
 
     if not require_cols(
-        pricing_scoped, {"rental_price_per_day"}, "pricing (scope selected)"
+        pricing_scoped, {COL_PRICE_PER_DAY}, "pricing (scope selected)"
     ):
         return
 
@@ -91,24 +90,24 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     with col1:
         st.metric("Nombre de locations (scope)", f"{len(df_scoped):,}")
         st.metric(
-            "Voitures observées (delay, scope)", f"{df_scoped['car_id'].nunique():,}"
+            "Voitures observées (delay, scope)", f"{df_scoped[COL_CAR_ID].nunique():,}"
         )
 
     with col2:
-        if "has_getaround_connect" in pricing_scoped.columns:
+        if COL_HAS_CONNECT in pricing_scoped.columns:
             st.metric(
                 "Voitures équipées Connect (scope)",
-                f"{pricing_scoped['has_getaround_connect'].mean() * 100:.1f} %",
+                f"{pricing_scoped[COL_HAS_CONNECT].mean() * 100:.1f} %",
             )
         st.metric(
             "Locations via Connect (scope)",
-            f"{df_scoped['checkin_type'].eq('connect').mean() * 100:.1f} %",
+            f"{df_scoped[COL_CHECKIN].eq('connect').mean() * 100:.1f} %",
         )
 
     with col3:
         # Use ended subset for delay KPIs
-        df_ended = df_scoped[df_scoped["state"].eq("ended")].copy()
-        s_delay = df_ended["delay_at_checkout_in_minutes"]
+        df_ended = df_scoped[df_scoped[COL_STATE].eq("ended")].copy()
+        s_delay = df_ended[COL_DELAY_AT_CHECKOUT]
 
         observed = s_delay.dropna()
 
@@ -170,7 +169,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     _place_title(fig_b, "Répartition des modes de check-in (%)")
 
     # C/D — ended only for meaningful delay status
-    df_for_counts = df_scoped[df_scoped["state"].eq("ended")].copy()
+    df_for_counts = df_scoped[df_scoped[COL_STATE].eq("ended")].copy()
     counts = checkout_counts(df_for_counts)
 
     # C — return share by check-in type (%)
@@ -178,7 +177,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         counts,
         x="checkout_status",
         y="pct",
-        color="checkin_type",
+        color=COL_CHECKIN,
         barmode="group",
         category_orders={"checkout_status": ORDER_STATUS},
         text="pct",
@@ -197,7 +196,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         counts,
         x="checkout_status",
         y="n",
-        color="checkin_type",
+        color=COL_CHECKIN,
         barmode="group",
         category_orders={"checkout_status": ORDER_STATUS},
         text="n",
@@ -227,17 +226,17 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     with cm2:
         st.metric(
             "Prix moyen ($/jour)",
-            f"{pricing_scoped['rental_price_per_day'].mean():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].mean():.0f}",
         )
     with cm3:
         st.metric(
             "Prix médian ($/jour)",
-            f"{pricing_scoped['rental_price_per_day'].median():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].median():.0f}",
         )
     with cm4:
         st.metric(
             "Écart-type ($/jour)",
-            f"{pricing_scoped['rental_price_per_day'].std():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].std():.0f}",
         )
 
     c1, c2 = st.columns(2)
@@ -246,10 +245,10 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     with c1:
         fig_hist = px.histogram(
             pricing_scoped,
-            x="rental_price_per_day",
+            x=COL_PRICE_PER_DAY,
             nbins=30,
             marginal="violin",
-            labels={"rental_price_per_day": "Prix par jour ($)"},
+            labels={COL_PRICE_PER_DAY: "Prix par jour ($)"},
         )
         fig_hist.update_layout(plot_bgcolor="white")
         _place_title(fig_hist, "Distribution des prix par jour")
@@ -260,8 +259,8 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         if "car_type" in pricing_scoped.columns:
             fig_box = px.box(
                 pricing_scoped,
-                x="car_type",
-                y="rental_price_per_day",
+                x=COL_CAR_TYPE,
+                y=COL_PRICE_PER_DAY,
                 points="outliers",
                 labels={
                     "rental_price_per_day": "Prix par jour ($)",
