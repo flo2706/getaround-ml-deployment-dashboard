@@ -49,6 +49,13 @@ Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`
   ]
 }
 ```
+
+Réponse attendue :
+```json
+{
+  "prediction": [42.7]
+}
+```
 > Le format `input` (non montré ici) est conservé pour respecter les consignes du projet.    
 > Le format `rows` est recommandé pour sa validation automatique.
 
