@@ -20,15 +20,13 @@ puis ouvrir:
 - Redoc : http://localhost:7860/redoc
 
 ---
-
 ## Endpoints
 - GET / : métadonnées (features attendues, chemin modèle, liens utiles)
 - GET /healthz : health check
 - POST /predict : prédiction du prix journalier
 
----
 
-## Exemple d'input /predict
+### Exemple d'input /predict
 Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`) :
 {
   "rows": [
@@ -50,6 +48,6 @@ Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`
   ]
 }
 
-> Le format `input` (non montré ici) est conservé pour respecter les consignes du projet.
+> Le format `input` (non montré ici) est conservé pour respecter les consignes du projet.    
 > Le format `rows` est recommandé pour sa validation automatique.
 
