@@ -9,7 +9,7 @@ Le modèle est un bundle MLflow exporté et chargé localement au démarrage de 
 ## Lancer l'API
 Pour un lancement fiable et reproductible (notamment sur Windows), l'utilisation de Docker est recommandée.
 
-### Build & Run
+### Build & run
 ```bash
 docker build -t getaround-api .
 docker run --rm -p 7860:7860 getaround-api
@@ -29,6 +29,7 @@ puis ouvrir:
 ---
 
 ## Exemple d'input /predict
+Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`) :
 {
   "rows": [
     {
@@ -49,5 +50,6 @@ puis ouvrir:
   ]
 }
 
-
+> Le format `input` (non montré ici) est conservé pour respecter les consignes du projet.
+> Le format `rows` est recommandé pour sa validation automatique.
 
