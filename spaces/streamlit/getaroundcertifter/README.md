@@ -22,7 +22,6 @@ Le dashboard est déployé sur Hugging Face Spaces :
 ```bash
 docker build -t getaround-dashboard .
 docker run --rm -p 8501:8501 getaround-dashboard
-.
 ```
 
->Remarques : Ce dashboard est une interface de visualisation et de démonstration - La prédiction est réalisée via l’API FastAPI associée.
+>Remarque : Ce dashboard est une interface de visualisation et de démonstration - La prédiction est réalisée via l’API FastAPI associée.
