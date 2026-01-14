@@ -104,7 +104,7 @@ def get_plotly_theme() -> dict:
             "xaxis": {"gridcolor": GRID_GREY},
             "yaxis": {"gridcolor": GRID_GREY},
             "hoverlabel": {"bgcolor": "white", "font": {"color": TEXT_DARK}},
-            "colorway": [BRAND_BLUE],
+            "colorway": [BRAND_BLUE]
         }
     }
 
@@ -114,7 +114,7 @@ def place_title(fig, text: str, *, y: float = 0.95) -> None:
     """Standardize title positioning for visual consistency across charts."""
     fig.update_layout(
         title=dict(text=text, x=0.5, y=y, xanchor="center", yanchor="top"),
-        margin=dict(t=70),
+        margin=dict(t=70)
     )
 
 
@@ -207,7 +207,7 @@ def checkout_counts(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
                 "checkout_status": pd.Series(dtype="object"),
                 "n": pd.Series(dtype="int"),
                 "pct": pd.Series(dtype="float"),
-                "total_type": pd.Series(dtype="int"),
+                "total_type": pd.Series(dtype="int")
             }
         )
 
@@ -215,7 +215,7 @@ def checkout_counts(df_delay_scoped: pd.DataFrame) -> pd.DataFrame:
         df[COL_DELAY_AT_CHECKOUT],
         bins=[-1e9, -1e-9, 1e-9, 1e9],
         labels=ORDER_STATUS,
-        include_lowest=True,
+        include_lowest=True
     )
 
     counts = (

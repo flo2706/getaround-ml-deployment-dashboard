@@ -42,7 +42,7 @@ def _legend_bottom(fig, y: float = -0.25) -> None:
 # Page
 def page_analyse_retards(
     df_delay_full: pd.DataFrame,
-    dataset_pricing: pd.DataFrame,
+    dataset_pricing: pd.DataFrame
 ) -> None:
     """ Operational analysis page """
 
@@ -66,7 +66,7 @@ def page_analyse_retards(
 
     st.markdown(
         "<h2 style='text-align:center;'>Analyse des retards & choix du seuil</h2>",
-        unsafe_allow_html=True,
+        unsafe_allow_html=True
     )
 
     st.caption(f"BORNAGE ACTIF : [{CLIP_MIN}, {CLIP_MAX}] mn")
@@ -76,7 +76,7 @@ def page_analyse_retards(
         "Règle produit : **location masquée** si `gap < seuil`. "
         "Conflits **résolus** : conflits historiques (`delay > gap`) "
         "qui auraient été masqués (`gap < seuil`).",
-        icon="ℹ️",
+        icon="ℹ️"
     )
     st.markdown("---")
 
@@ -84,12 +84,12 @@ def page_analyse_retards(
     scope = st.radio(
         "Portée",
         ["Toutes les voitures", "Connect uniquement", "Mobile uniquement"],
-        horizontal=True,
+        horizontal=True
     )
     df_scoped, dataset_pricing = apply_scope(df_delay, dataset_pricing, scope)
     st.markdown("---")
 
-    # PART 1 — Distribution des retards
+    # PART 1 — Delay Distribution
     st.divider()
     st.subheader("Partie 1 - Distribution des retards")
 
@@ -128,7 +128,7 @@ def page_analyse_retards(
             pie_colors = {
                 "En retard": STATUS_COLORS["En retard"],
                 "À l'heure / en avance": STATUS_COLORS["À l'heure"],
-                "Non renseigné": STATUS_COLORS["Non renseigné"],
+                "Non renseigné": STATUS_COLORS["Non renseigné"]
             }
 
             fig_pie = px.pie(
@@ -136,7 +136,7 @@ def page_analyse_retards(
                 values=values,
                 hole=0.35,
                 color=labels,
-                color_discrete_map=pie_colors,
+                color_discrete_map=pie_colors
             )
             _place_title(fig_pie, "Statut du retour (avec Non renseigné)")
             _legend_bottom(fig_pie)
@@ -162,7 +162,7 @@ def page_analyse_retards(
                     x="delay_clipped",
                     nbins=60,
                     range_x=[0, CLIP_MAX],
-                    labels={"delay_clipped": "Retard au checkout (mn, borné)"},
+                    labels={"delay_clipped": "Retard au checkout (mn, borné)"}
                 )
                 _place_title(fig_hist, "Distribution des retards (minutes)")
                 _legend_bottom(fig_hist)
@@ -182,7 +182,7 @@ def page_analyse_retards(
 
     st.markdown("---")
 
-    # PART 2 — Propagation du retard à la location suivante
+    # PART 2 — Delay Propagation to the Next Rental
     st.divider()
     st.subheader("Partie 2 - Impact des retards sur la location suivante")
 
@@ -230,8 +230,8 @@ def page_analyse_retards(
             labels={
                 "delay_clipped": "Retard au checkout (mn, borné)",
                 "next_delay": "Retard de la suivante (mn, borné)",
-                COL_CHECKIN: "Type de check-in",
-            },
+                COL_CHECKIN: "Type de check-in"
+            }
         )
         _place_title(
             fig_scatter,
@@ -262,7 +262,7 @@ def page_analyse_retards(
 
     st.markdown("---")
 
-    # PART 3 — Impact du délai (gap) entre deux locations
+    # PART 3 — Impact of the Gap Between Two Rentals
     st.divider()
     st.subheader("Partie 3 - Impact du délai entre deux locations")
 
@@ -272,7 +272,7 @@ def page_analyse_retards(
         min_value=0,
         max_value=180,
         value=int(preset),
-        step=5,
+        step=5
     )
     st.caption(
         "Le buffer masque les créneaux où l'écart entre deux locations est inférieur au seuil défini ci-dessus."
@@ -294,7 +294,7 @@ def page_analyse_retards(
         "Masquées mobile (%)": COLOR_CI.get("mobile", "#1f77b4"),
         "Masquées connect (%)": COLOR_CI.get("connect", "#ff7f0e"),
         "Évités mobile (%)": COLOR_CI.get("mobile", "#1f77b4"),
-        "Évités connect (%)": COLOR_CI.get("connect", "#ff7f0e"),
+        "Évités connect (%)": COLOR_CI.get("connect", "#ff7f0e")
     }
 
     left, right = st.columns([3, 1])
@@ -307,7 +307,7 @@ def page_analyse_retards(
             y="value",
             color="variable",
             markers=True,
-            color_discrete_map=color_curves,
+            color_discrete_map=color_curves
         )
         _place_title(fig_loss, "🔻 % de locations masquées vs seuil (règle produit)")
         _legend_bottom(fig_loss)
@@ -327,7 +327,7 @@ def page_analyse_retards(
             yref="paper",
             y=1.05,
             text=f"Seuil = {threshold_min} mn",
-            showarrow=False,
+            showarrow=False
         )
         fig_loss.add_annotation(
             xref="paper",
@@ -335,7 +335,7 @@ def page_analyse_retards(
             yref="paper",
             y=-0.22,
             text=f"Basé sur {len(df_gap):,} lignes où l'écart (gap) est connu.",
-            showarrow=False,
+            showarrow=False
         )
         fig_loss.update_layout(plot_bgcolor="white")
         st.plotly_chart(fig_loss, use_container_width=True)
@@ -365,7 +365,7 @@ def page_analyse_retards(
             y="value",
             color="variable",
             markers=True,
-            color_discrete_map=color_curves,
+            color_discrete_map=color_curves
         )
         _place_title(fig_solved, " % de conflits historiques évités vs seuil")
         _legend_bottom(fig_solved)
@@ -402,17 +402,17 @@ def page_analyse_retards(
             loss_curve.assign(type_courbe="Masquées (%)"),
             solved_curve.assign(type_courbe="Évités (%)"),
         ],
-        ignore_index=True,
+        ignore_index=True
     )
 
     st.download_button(
         label="⬇️ Télécharger les courbes (CSV)",
         data=csv_export.to_csv(index=False, sep=";", encoding="utf-8-sig"),
         file_name=f"courbes_getaround_{threshold_min}mn.csv",
-        mime="text/csv",
+        mime="text/csv"
     )
 
-    # PART 4 — Simulation business finale
+    # PART 4 — Final Business Simulation
     st.markdown("---")
     st.divider()
     st.subheader("Partie 4 - Simulation business du buffer choisi")
@@ -426,7 +426,7 @@ def page_analyse_retards(
             max_value=14.0,
             value=1.5,
             step=0.5,
-            help="Hypothèse business utilisée pour estimer la valeur unitaire.",
+            help="Hypothèse business utilisée pour estimer la valeur unitaire."
         )
 
     with col2:
@@ -437,7 +437,7 @@ def page_analyse_retards(
                 max_value=100,
                 value=60,
                 step=5,
-                help="Dans X % des conflits, on perd réellement du CA (annulation, geste co.).",
+                help="Dans X % des conflits, on perd réellement du CA (annulation, geste co.)."
             )
             / 100.0
         )
@@ -463,7 +463,7 @@ def page_analyse_retards(
         ):
             mean_daily_price = dataset_pricing.loc[
                 dataset_pricing[COL_HAS_CONNECT],
-                price_col,
+                price_col
             ].mean()
         elif (
             scope == "Mobile uniquement"
@@ -471,7 +471,7 @@ def page_analyse_retards(
         ):
             mean_daily_price = dataset_pricing.loc[
                 ~dataset_pricing[COL_HAS_CONNECT],
-                price_col,
+                price_col
             ].mean()
         else:
             mean_daily_price = dataset_pricing[price_col].mean()

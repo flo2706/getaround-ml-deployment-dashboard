@@ -11,17 +11,17 @@ import streamlit as st
 
 XLSX_URL: str = os.getenv(
     "GETAROUND_DELAY_XLSX_URL",
-    "https://huggingface.co/datasets/flodussart/getaround_xls_certif/resolve/main/get_around_delay_analysis.xlsx",
+    "https://huggingface.co/datasets/flodussart/getaround_xls_certif/resolve/main/get_around_delay_analysis.xlsx"
 )
 
 CSV_URL: str = os.getenv(
     "GETAROUND_PRICING_CSV_URL",
-    "https://huggingface.co/datasets/flodussart/getaround_pricing_project/resolve/main/get_around_pricing_project.csv",
+    "https://huggingface.co/datasets/flodussart/getaround_pricing_project/resolve/main/get_around_pricing_project.csv"
 )
 
 API_URL: str = os.getenv(
     "GETAROUND_API_URL",
-    "https://flodussart-getaround-delay-pricing-api.hf.space",
+    "https://flodussart-getaround-delay-pricing-api.hf.space"
 )
 
 
@@ -56,7 +56,7 @@ def fetch_api_info() -> dict[str, Optional[Any]]:
         data: dict[str, Any] = resp.json() or {}
         return {
             "features": data.get("features"),
-            "model_path": data.get("model_path"),
+            "model_path": data.get("model_path")
         }
     except Exception:
         # Non-blocking for the UI: return a minimal fallback.
@@ -106,5 +106,5 @@ __all__ = [
     "load_pricing",
     "load_delay",
     "fetch_api_info",
-    "predict_rows",
+    "predict_rows"
 ]

@@ -45,7 +45,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
 
     st.markdown(
         "<h1 style='text-align:center;'>Dashboard Getaround — Analyse & Prédiction</h1>",
-        unsafe_allow_html=True,
+        unsafe_allow_html=True
     )
     st.caption(
         f"Dernière mise à jour : {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M')}"
@@ -55,7 +55,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     scope = st.radio(
         "Portée des indicateurs",
         ["Toutes les voitures", "Connect uniquement", "Mobile uniquement"],
-        horizontal=True,
+        horizontal=True
     )
 
     # Normalize columns + apply scope
@@ -74,7 +74,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     if not require_cols(
         df_scoped,
         {COL_STATE, COL_CHECKIN, COL_DELAY_AT_CHECKOUT, COL_CAR_ID},
-        "df_delay (scope selected)",
+        "df_delay (scope selected)"
     ):
         return
 
@@ -97,11 +97,11 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         if COL_HAS_CONNECT in pricing_scoped.columns:
             st.metric(
                 "Voitures équipées Connect (scope)",
-                f"{pricing_scoped[COL_HAS_CONNECT].mean() * 100:.1f} %",
+                f"{pricing_scoped[COL_HAS_CONNECT].mean() * 100:.1f} %"
             )
         st.metric(
             "Locations via Connect (scope)",
-            f"{df_scoped[COL_CHECKIN].eq('connect').mean() * 100:.1f} %",
+            f"{df_scoped[COL_CHECKIN].eq('connect').mean() * 100:.1f} %"
         )
 
     with col3:
@@ -135,7 +135,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
             color="Statut de réservation",
             text="Pourcentage",
             barmode="stack",
-            color_discrete_map=RESA_COLORS,
+            color_discrete_map=RESA_COLORS
         )
         fig_a.update_traces(texttemplate="%{y:.1f}%", textposition="inside")
         fig_a.update_layout(
@@ -145,7 +145,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
             xaxis_title=None,
             plot_bgcolor="white",
             legend_title_text="",
-            legend=dict(orientation="h", y=-0.3),
+            legend=dict(orientation="h", y=-0.3)
         )
         _place_title(fig_a, "Réservations achevées vs annulées (100%)")
     else:
@@ -159,7 +159,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         y="Pourcentage",
         color="Type de check-in",
         text="Pourcentage",
-        color_discrete_map=COLOR_CI,
+        color_discrete_map=COLOR_CI
     )
     fig_b.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
     fig_b.update_layout(legend_title_text="", legend=dict(orientation="h", y=-0.2))
@@ -182,7 +182,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         category_orders={"checkout_status": ORDER_STATUS},
         text="pct",
         color_discrete_map=COLOR_CI,
-        labels={"checkout_status": "Statut du départ", "pct": "Proportion (%)"},
+        labels={"checkout_status": "Statut du départ", "pct": "Proportion (%)"}
     )
     fig_c.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
     fig_c.update_yaxes(
@@ -201,7 +201,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
         category_orders={"checkout_status": ORDER_STATUS},
         text="n",
         color_discrete_map=COLOR_CI,
-        labels={"checkout_status": "Statut du départ", "n": "Nombre"},
+        labels={"checkout_status": "Statut du départ", "n": "Nombre"}
     )
     fig_d.update_traces(texttemplate="%{text:,}", textposition="outside")
     fig_d.update_layout(legend_title_text="", legend=dict(orientation="h", y=-0.2))
@@ -226,17 +226,17 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
     with cm2:
         st.metric(
             "Prix moyen ($/jour)",
-            f"{pricing_scoped[COL_PRICE_PER_DAY].mean():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].mean():.0f}"
         )
     with cm3:
         st.metric(
             "Prix médian ($/jour)",
-            f"{pricing_scoped[COL_PRICE_PER_DAY].median():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].median():.0f}"
         )
     with cm4:
         st.metric(
             "Écart-type ($/jour)",
-            f"{pricing_scoped[COL_PRICE_PER_DAY].std():.0f}",
+            f"{pricing_scoped[COL_PRICE_PER_DAY].std():.0f}"
         )
 
     c1, c2 = st.columns(2)
@@ -248,7 +248,7 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
             x=COL_PRICE_PER_DAY,
             nbins=30,
             marginal="violin",
-            labels={COL_PRICE_PER_DAY: "Prix par jour ($)"},
+            labels={COL_PRICE_PER_DAY: "Prix par jour ($)"}
         )
         fig_hist.update_layout(plot_bgcolor="white")
         _place_title(fig_hist, "Distribution des prix par jour")
@@ -264,8 +264,8 @@ def main_page(dataset_pricing: pd.DataFrame, df_delay: pd.DataFrame) -> None:
                 points="outliers",
                 labels={
                     "rental_price_per_day": "Prix par jour ($)",
-                    "car_type": "Type de véhicule",
-                },
+                    "car_type": "Type de véhicule"
+                }
             )
             fig_box.update_layout(plot_bgcolor="white", xaxis_tickangle=-30)
             _place_title(fig_box, "Prix par jour selon type de véhicule")

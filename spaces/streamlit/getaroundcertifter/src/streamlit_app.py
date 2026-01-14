@@ -22,7 +22,7 @@ def router() -> None:
     page = st.sidebar.selectbox(
         "Choisissez une page",
         options=("Accueil", "Analyse des retards", "Prédiction des prix"),
-        index=0,
+        index=0
     )
 
     if page == "Accueil":
