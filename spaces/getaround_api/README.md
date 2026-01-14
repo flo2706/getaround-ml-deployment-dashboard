@@ -28,6 +28,7 @@ puis ouvrir:
 
 ### Exemple d'input /predict
 Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`) :
+```json
 {
   "rows": [
     {
@@ -47,7 +48,7 @@ Exemple de requête pour l’endpoint `POST /predict` (format recommandé `rows`
     }
   ]
 }
-
+```
 > Le format `input` (non montré ici) est conservé pour respecter les consignes du projet.    
 > Le format `rows` est recommandé pour sa validation automatique.
 
