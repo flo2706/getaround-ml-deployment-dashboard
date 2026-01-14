@@ -1,20 +1,25 @@
----
-title: Getaroundcertifter
-emoji: 🚀
-colorFrom: red
-colorTo: red
-sdk: docker
-app_port: 8501
-tags:
-- streamlit
-pinned: false
-short_description: Streamlit template space
-license: apache-2.0
+# Getaround Pricing Dashboard
+
+Dashboard **Streamlit** permettant de visualiser et tester les résultats du projet Getaround.
+
+Il permet notamment :
+- d’explorer les analyses réalisées sur les retards et les locations,
+- de visualiser les impacts business,
+- d’interagir avec l’API de prédiction du prix journalier.
+
 ---
 
-# Welcome to Streamlit!
+## Accès au dashboard
 
-Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
+Le dashboard est déployé sur Hugging Face Spaces :
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+- https://flodussart-getaround-delay-pricing-dashboard.hf.space
+
+---
+
+## Lancer le dashboard en local (recommandé : Docker)
+
+```bash
+docker build -t getaround-dashboard .
+docker run --rm -p 8501:8501 getaround-dashboard
+.
