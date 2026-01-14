@@ -1,6 +1,6 @@
 <h1 align="center">Getaround API</h1>
 
-API FastAPI de prédiction du prix journalier de location d’un véhicule.
+API FastAPI de prédiction du prix journalier de location d’un véhicule.  
 Le modèle est un bundle MLflow exporté et chargé localement au démarrage de l’API (pas de connexion à un serveur MLflow de tracking).
 
 ---
