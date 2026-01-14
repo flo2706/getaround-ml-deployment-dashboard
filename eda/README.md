@@ -1,6 +1,6 @@
 # EDA
 
-## I. Analyse des retards (`delay_analysis`)
+## I. Analyse des retards (`delay_analysis.ipynb`)
 
 ### Sommaire
 
@@ -28,7 +28,7 @@
    - Impact d’un buffer minimal sur les locations à risque
    - Impact du retard précédent sur le taux d'annulation (locations enchaînées < 12h)
 
-## II. Analyse des prix (`pricing_analysis`)
+## II. Analyse des prix (`pricing_analysis.ipynb`)
 
 ### Sommaire
 
@@ -38,3 +38,19 @@
 - Statistiques descriptives
 - Distribution des prix de location
 - Analyse bivariée
+
+## III. Préparation du dashboard (`prep_dashboard.ipynb`)
+
+### Sommaire
+
+1. Imports & chargement des données
+2. Constantes
+3. Périmètre d'analyse (retards et locations terminées)
+4. Helpers : Fonctions utilitaires
+5. Scope
+6. Ponctualité par flux
+7. Distribution des retards au checkout
+8. Impact de la règle "Gap" (locations masquées / conflits évités)
+9. Propagation du retard vers la location suivante
+10. ROI du seuil : gain marginal et efficacité (résolus / masqués)
+11. Scénario business : estimation du CA impacté (proxy)
