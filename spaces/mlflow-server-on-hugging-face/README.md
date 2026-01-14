@@ -1,7 +1,7 @@
 <h1 align="center">MLflow Tracking Server</h1>
 
 Ce service déploie un serveur MLflow utilisé pour le suivi des expériences d’entraînement des modèles (tracking des runs, métriques et artefacts).    
-Ce serveur est destiné à être utilisé par les scripts d’entraînement du projet.    
+Ce serveur MLflow fait partie du projet Getaround et centralise le suivi des expériences d’entraînement des modèles.     
 Il n’est pas requis pour faire tourner l’API de prédiction.
 
 ---
@@ -30,7 +30,7 @@ Variables utilisées :
 
 Ces variables sont fournies automatiquement par la plateforme en production.
 
-### Exemple en local (sans S3)
+### Exemple en local (sans dépendance à AWS)
 
 ```bash
 docker run --rm -p 7860:7860 \
