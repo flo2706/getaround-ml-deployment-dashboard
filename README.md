@@ -37,7 +37,7 @@ Le projet s’inscrit dans une démarche **MLOps complète**, de l’analyse exp
 
 - **Suivi du modèle**
   - Gestion des expérimentations et métriques via **MLflow**  
-  - Stockage des artefacts sur Amazon S3 et suivi des runs dans Neon DB (PostgreSQL)
+  - Stockage des artefacts sur Amazon S3 et suivi des runs dans Neon (PostgreSQL)
 
 - **Documentation et reproductibilité**
   - Documentation automatique à l’URL `/docs`  
@@ -76,12 +76,7 @@ L’API permet de générer des prédictions de prix optimaux à partir des cara
 - Méthode : `POST`  
 - Exemple d’entrée :
 
-```json
-{
-  "input": [[7.0, 0.27, 0.36, 20.7, 0.045, 45.0, 170.0, 1.001, 3.0, 0.45, 8.8]]
-}
-```
-Documentation interactive :  
+Voir la documentation interactive de l’API pour les formats d’entrée (`input` et `rows`):
 [**Documentation de l'API sur Hugging Face**](https://flodussart-getaround-delay-pricing-api.hf.space/docs)
 
 Espace Hugging Face (Dashboard)
