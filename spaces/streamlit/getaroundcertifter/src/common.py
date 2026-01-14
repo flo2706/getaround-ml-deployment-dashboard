@@ -65,6 +65,9 @@ __all__ = [
     "COL_PREV_ID",
     "COL_STATE",
     "COL_HAS_CONNECT",
+    "COL_CAR_ID",
+    "COL_PRICE_PER_DAY",
+    "COL_CAR_TYPE",
     # constants
     "CLIP_MIN",
     "CLIP_MAX",
