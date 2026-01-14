@@ -1,4 +1,4 @@
-# Getaround Pricing Dashboard
+<h1 align="center">Getaround Pricing Dashboard</h1>
 
 Dashboard **Streamlit** permettant de visualiser et tester les résultats du projet Getaround.
 
