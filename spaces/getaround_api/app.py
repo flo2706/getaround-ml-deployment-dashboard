@@ -50,7 +50,7 @@ def load_features_from_artifacts(model_dir: str) -> list[str]:
         "automatic_car",
         "has_getaround_connect",
         "has_speed_regulator",
-        "winter_tires",
+        "winter_tires"
     ]
 
 
@@ -66,13 +66,13 @@ app = FastAPI(
     ),
     version="1.0",
     docs_url="/docs",
-    redoc_url="/redoc",
+    redoc_url="/redoc"
 )
 
 # Authorized origins — Streamlit app and local dev
 origins = [
     "https://flodussart-getaround-delay-pricing-dashboard.hf.space",  
-    "http://localhost:8501",  # local Streamlit testing
+    "http://localhost:8501" # local Streamlit testing
 ]
 
 app.add_middleware(
@@ -80,7 +80,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 # Load MLflow model bundle locally
@@ -104,7 +104,7 @@ ALLOWED_PAINT = {
     "red",
     "beige",
     "green",
-    "orange",
+    "orange"
 }
 ALLOWED_CARTYPE = {
     "estate",
@@ -114,7 +114,7 @@ ALLOWED_CARTYPE = {
     "subcompact",
     "coupe",
     "convertible",
-    "van",
+    "van"
 }
 
 KNOWN_MODELS = {
@@ -144,7 +144,7 @@ KNOWN_MODELS = {
     "lexus",
     "honda",
     "mazda",
-    "yamaha",
+    "yamaha"
 }
 
 # If True: reject unseen categories with validation error
@@ -181,7 +181,7 @@ class PredictRow(BaseModel):
         "fuel_grouped",
         "paint_color",
         "car_type",
-        mode="before",
+        mode="before"
     )
     @classmethod
     def _normalize(cls, v: Any) -> str:
@@ -237,7 +237,7 @@ class PredictPayload(BaseModel):
         default=None,
         description=(
             "Format legacy: matrix. Each row must follow ordering: {}".format(FEATURES)
-        ),
+        )
     )
 
 
@@ -251,7 +251,7 @@ def root() -> dict[str, Any]:
         "docs": "/docs",
         "dashboard": "https://flodussart-getaround-delay-pricing-dashboard.hf.space",
         "model_path": LOCAL_MODEL_PATH,
-        "features": FEATURES,
+        "features": FEATURES
     }
 
 
@@ -274,7 +274,7 @@ def build_df_from_payload(payload: PredictPayload) -> pd.DataFrame:
         if missing:
             raise HTTPException(
                 status_code=400,
-                detail=f"Colonnes manquantes: {missing}. Attendu: {FEATURES}",
+                detail=f"Colonnes manquantes: {missing}. Attendu: {FEATURES}"
             )
         # Enforce training-time column order
         return df[FEATURES]
