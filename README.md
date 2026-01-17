@@ -1,10 +1,8 @@
 <h1 align="center">Getaround — ML Deployment Project</h1>
 <h2 align="center">Delay Analysis & Pricing Optimization</h2>
 
-<p align="center"><strong>Déploiement d’un dashboard web et d’un pipeline de machine learning</strong></p>
-
 <p align="center">
-  Projet Getaround — <em>Analyse des retards et optimisation des prix</em><br>
+  <strong>Déploiement d’un dashboard analytique et d’un pipeline de Machine Learning en production</strong>
 </p>
 
 
@@ -110,4 +108,4 @@ Deux jeux de données hébergés sur Hugging Face Datasets assurent la traçabil
 ## Contexte
 
 Projet réalisé dans le cadre du bloc "Deployment" de la certification  
-**« Concepteur Développeur en Sciences des Données » (RNCP 35288 – Jedha)**.
+**« Concepteur Développeur en Science des Données » (RNCP 35288 – Jedha)**.
